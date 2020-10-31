@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from .views import websocket_show
+from views import websocket_show
 import asyncio
 
 
