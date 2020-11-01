@@ -15,6 +15,9 @@ WebsocketService().connect(
     {
         "phone": "+7009",
         "email": "mail@mail.com",
-        "first_name": "Djo"
+        "first_name": "Djo",
+        "password": "123456",
+        "date_birthday": "1994-20-02",
+        "gender": "male"
     }
 )
