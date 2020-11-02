@@ -14,10 +14,10 @@ class WebsocketService:
 WebsocketService().connect(
     {
         "phone": "+7009",
-        "email": "mail@mail.com",
+        "email": "mail@dns.ru",
         "first_name": "Djo",
         "password": "123456",
-        "date_birthday": "1994-20-02",
+        "date_birthday": "1994-02-20",
         "gender": "male"
     }
 )

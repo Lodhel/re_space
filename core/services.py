@@ -17,8 +17,8 @@ class General:
         try:
             obj = SESSION.query(model).all()
             obj = obj[-1]
-            pk_instance = General().generate_id(obj)
-        except IndexError:
+            pk_instance = obj.id + 1
+        except:
             pk_instance = 0
 
         return pk_instance
@@ -66,15 +66,15 @@ class UserServices:
         if not login_field:
             return None
         else:
-            return "UniqueError: login fields is busy"
+            return "UniqueError: email fields is busy"
 
-    def validate_mode(self, login):
-        unique_data = self.unique_mode(login)
+    def validate_mode(self, email):
+        unique_data = self.unique_mode(email)
         if unique_data:
             return unique_data
-        is_valid = validate_email(login)
+        is_valid = validate_email(email)
         if not is_valid:
-            return "TypeError: login field it should be EmailType"
+            return "TypeError: email field it should be EmailType"
 
         return None
 
@@ -89,7 +89,7 @@ class UserServices:
                 'gender': data["gender"],
             }
 
-            validation_info = self.validate_mode(data["login"])
+            validation_info = self.validate_mode(data["email"])
             if validation_info:
                 return {
                         "success": False,

@@ -11,6 +11,7 @@ async def websocket_show(request):
     await ws.prepare(request)
     async for msg in ws:
         data = json.loads(msg.data)
-        ws.send_str(json.dumps(UserServices().save(data)))
+        response = UserServices().save(data)
+        ws.send_str(json.dumps(response))
 
     return ws

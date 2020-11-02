@@ -21,7 +21,7 @@ def upgrade():
     op.create_table(
         'base_user',
         sa.Column("id", sa.Integer(), primary_key=True, unique=True),
-        sa.Column('login', sa.String(50)),
+        sa.Column('email', sa.String(50)),
         sa.Column('password', sa.Text(())),
         sa.Column('token', sa.Text())
     )
