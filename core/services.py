@@ -123,7 +123,7 @@ class UserServices:
                 "token": user.token,  # TODO update token
                 'first_name': profile.first_name,
                 "phone": profile.phone,
-                "date_birthday": profile.date_birthday,
+                "date_birthday": str(profile.date_birthday),
                 'gender': profile.gender,
             }
             return {

@@ -33,8 +33,8 @@ class Client(object):
     @gen.coroutine
     def run(self):
         msg = {
-            "phone": "+7009",
-            "email": "mail@mail.com",
+            "phone": "+70019",
+            "email": "mail2@mail.com",
             "first_name": "Djo",
             "password": "123456",
             "date_birthday": "1994-02-20",
@@ -56,5 +56,5 @@ class Client(object):
 
 
 if __name__ == "__main__":
-    client = Client("ws://localhost:8080/api/show/", 5)
+    client = Client("ws://localhost:8080/api/login/", 5)
 
