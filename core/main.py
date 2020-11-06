@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from views import websocket_show
+from views import websocket_registration
 import asyncio
 
 
@@ -10,7 +10,7 @@ app = web.Application(loop=loop)
 
 
 app.add_routes([
-    web.get('/api/show/', websocket_show),
+    web.get('/api/registration/', websocket_registration),
 ])
 
 web.run_app(app)

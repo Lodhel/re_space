@@ -54,22 +54,27 @@ class UserServices:
         SESSION.add(instance)
         SESSION.flush()
 
-        return {  # TODO I going to data
+        return {
             "id": pk_instance,
             "email": data["email"],
             "first_name": data["first_name"],
+            "phone": data["phone"],
+            "date_birthday": data["date_birthday"],
+            "gender": data["gender"],
             "token": token
         }
 
-    def unique_mode(self, email):
-        login_field = SESSION.query(Profile).filter(BaseUser.email == email).first()
-        if not login_field:
-            return None
+    def unique_mode(self, email, phone):
+        email_field = SESSION.query(Profile).filter(BaseUser.email == email).first()
+        if not email_field:
+            phone_field = SESSION.query(Profile).filter(Profile.phone == phone).first()
+            if not phone_field:
+                return None
         else:
-            return "UniqueError: email fields is busy"
+            return "UniqueError: email or phone fields is busy"
 
-    def validate_mode(self, email):
-        unique_data = self.unique_mode(email)
+    def validate_mode(self, email, phone):
+        unique_data = self.unique_mode(email, phone)
         if unique_data:
             return unique_data
         is_valid = validate_email(email)
@@ -89,7 +94,7 @@ class UserServices:
                 'gender': data["gender"],
             }
 
-            validation_info = self.validate_mode(data["email"])
+            validation_info = self.validate_mode(data["email"], data["phone"])
             if validation_info:
                 return {
                         "success": False,
@@ -103,6 +108,72 @@ class UserServices:
                 }
 
         instance = self.create(data)
+
+        return {
+                "success": True,
+                "data": instance
+            }
+
+    def authentication(self, user, password):
+        if user and user.password == password:
+            profile = SESSION.query(Profile).filter(Profile.user == user.id).first()
+            instance = {
+                "id": profile.id,
+                "email": user.email,
+                "token": user.token,  # TODO update token
+                'first_name': profile.first_name,
+                "phone": profile.phone,
+                "date_birthday": profile.date_birthday,
+                'gender': profile.gender,
+            }
+            return {
+                "success": True,
+                "data": instance
+            }
+
+        else:
+            return {
+                "success": False,
+                "error": "AuthError"
+            }
+
+    def check_data(self, data):
+        if data["email"]:
+            user = SESSION.query(BaseUser).filter(BaseUser.email == data["email"]).first()
+
+            return self.authentication(user, data["password"])
+
+        if data["phone"]:
+            profile = SESSION.query(Profile).filter(Profile.phone == data["phone"]).first()
+            user = SESSION.query(Profile).get(profile.user)
+
+            return self.authentication(user, data["password"])
+
+        return {
+            "success": False,
+            "error": "Sorry, but something went wrong"
+        }
+
+    def check(self, data):
+        try:
+            data = {
+                "email": data["email"],
+                "password": General().crypt(data["password"]),
+                "phone": None
+            }
+        except KeyError:
+            data = {
+                "password": General().crypt(data["password"]),
+                "phone": data["phone"],
+                "email": None
+            }
+        except:
+            return {
+                    "success": False,
+                    "error": "one of the arguments was not passed"
+                }
+
+        instance = self.check_data(data)
 
         return {
                 "success": True,
