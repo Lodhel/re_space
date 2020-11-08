@@ -1,7 +1,7 @@
 import datetime
 
 from models import SESSION
-from models import BaseUser, Profile
+from models import BaseUser, Profile, CategoryItem, Location, Item
 
 
 import hashlib
@@ -179,3 +179,21 @@ class UserServices:
                 "success": True,
                 "data": instance
             }
+
+
+class ItemService:
+
+    def get(self):
+        data = SESSION.query(Item).all()
+        instance = [{
+            "id": item.id,
+            "category": item.category,
+            "location": item.location,
+            'title': item.title,
+            "article": item.article,
+            "attribute": item.attribute
+        } for item in data]
+        return {
+            "success": True,
+            "data": instance
+        }

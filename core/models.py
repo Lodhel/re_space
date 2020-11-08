@@ -73,3 +73,49 @@ class Profile(Base):
     phone = Column(unique=True)
     date_birthday = Column(nullable=True)
     gender = Column()
+
+
+class CategoryItem(Base):
+
+    def __init__(self, id=None, title=None):
+        self.id = id
+        self.title = title
+
+    __tablename__ = Table('category_item', Main().create_metadata(), autoload=True)
+
+    id = Column(Integer, primary_key=True, unique=True)
+    title = Column(unique=True)
+
+
+class Location(Base):
+
+    def __init__(self, id=None, article=None, title=None):
+        self.id = id
+        self.article = article
+        self.title = title
+
+    __tablename__ = Table('location', Main().create_metadata(), autoload=True)
+
+    id = Column(Integer, primary_key=True, unique=True)
+    title = Column(unique=True)
+    article = Column()
+
+
+class Item(Base):
+
+    def __init__(self, id=None, category=None, article=None, attribute=None, title=None, location=None):
+        self.id = id
+        self.category = category
+        self.article = article
+        self.attribute = attribute
+        self.title = title
+        self.location = location
+
+    __tablename__ = Table('item', Main().create_metadata(), autoload=True)
+
+    id = Column(Integer, primary_key=True, unique=True)
+    article = Column()
+    category = Column(unique=True)
+    location = Column(unique=True)
+    attribute = Column()
+    title = Column(unique=True)
