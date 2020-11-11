@@ -5,7 +5,7 @@ DEBUG = False
 DB = {
     "name_db": "re_space",
     "user": "postgres",
-    "password": "q319546",
+    "password": "saturn78s",
     "host": "localhost",
     "client": "postgresql"
 }

@@ -5,7 +5,7 @@ from sqlalchemy.orm import create_session
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy_utils import EmailType
 
-from .settings import DB
+from settings import DB
 
 
 class Main:
