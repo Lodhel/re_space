@@ -32,15 +32,6 @@ class Client(object):
 
     @gen.coroutine
     def run(self):
-        msg = {
-            "phone": "+70019",
-            "email": "mail2@mail.com",
-            "first_name": "Djo",
-            "password": "123456",
-            "date_birthday": "1994-02-20",
-            "gender": "male"
-        }
-        yield self.ws.write_message(json.dumps(msg))
         msg = yield self.ws.read_message()
         print(msg)
         self.run()
