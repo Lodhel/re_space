@@ -119,3 +119,28 @@ class Item(Base):
     location = Column(unique=True)
     attribute = Column()
     title = Column(unique=True)
+
+
+class Food(Base):
+
+    def __init__(self, id=None, item=None, user=None, amount=None, measure=None,
+                 date_start=None, date_end=None, status=None):
+        self.id = id
+        self.item = item
+        self.user = user
+        self.date_start = date_start
+        self.date_end = date_end
+        self.status = status
+        self.amount = amount
+        self.measure = measure
+
+    __tablename__ = Table('food', Main().create_metadata(), autoload=True)
+
+    id = Column(Integer, primary_key=True, unique=True)
+    item = Column(Integer, unique=True)
+    user = Column(Integer, unique=True)
+    date_start = Column()
+    date_end = Column()
+    status = Column(unique=True)
+    amount = Column()
+    measure = Column()
