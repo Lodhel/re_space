@@ -141,6 +141,6 @@ class Food(Base):
     user = Column(Integer, unique=True)
     date_start = Column()
     date_end = Column()
-    status = Column(unique=True)
+    status = Column()
     amount = Column()
     measure = Column()

@@ -2,7 +2,7 @@ from aiohttp import web
 
 import json
 
-from services import UserServices, ItemService
+from services import UserServices, ItemService, FoodServices
 
 
 async def websocket_registration(request):
@@ -44,3 +44,13 @@ async def websocket_echo(request):
     async for msg in ws:
         for client in request.app['channels']:
             await client.send_json(msg.data)
+
+
+async def websocket_food(request):
+
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+    async for msg in ws:
+        data = json.loads(msg.data)
+        response = FoodServices().create(data)
+        await ws.send_json(response)

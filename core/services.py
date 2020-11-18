@@ -1,7 +1,7 @@
 import datetime
 
 from models import SESSION
-from models import BaseUser, Profile, CategoryItem, Location, Item
+from models import BaseUser, Profile, CategoryItem, Location, Item, Food
 
 
 import hashlib
@@ -183,6 +183,9 @@ class UserServices:
 
 class ItemService:
 
+    def save(self, data, pk):
+        pass
+
     def get(self):
         data = SESSION.query(Item).all()
         instance = [{
@@ -197,3 +200,18 @@ class ItemService:
             "success": True,
             "data": instance
         }
+
+
+class FoodServices:
+
+    def save(self, data, pk, item):
+        instance = Food(
+            id=pk, item=item, user=data["user"], date_start=data["date_start"],
+            date_end=data["date_end"], status=data["status"], amount=data["amount"], measure=data["measure"]
+        )
+
+        SESSION.add(instance)
+        SESSION.flush()
+
+    def create(self, data):
+        pass
