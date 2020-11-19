@@ -184,7 +184,13 @@ class UserServices:
 class ItemService:
 
     def save(self, data, pk):
-        pass
+        instance = Item(
+            id=pk, article=data["article"], category=data["category"], location=data["location"],
+            attribute=data["attribute"], title=data["title"]
+        )
+
+        SESSION.add(instance)
+        SESSION.flush()
 
     def get(self):
         data = SESSION.query(Item).all()
@@ -213,5 +219,69 @@ class FoodServices:
         SESSION.add(instance)
         SESSION.flush()
 
+    def get_or_create_category_for_item(self):
+        category = SESSION.query(CategoryItem).filter(CategoryItem.title == "food").first()
+        if not category:
+            category = General().generate_id(CategoryItem)
+            instance = CategoryItem(category, "food")
+
+            SESSION.add(instance)
+            SESSION.flush()
+
+            return category
+
+        return category.id
+
+    def get_or_create_location(self):
+        location = SESSION.query(Location).filter(Location.title == "cafe").first()
+        if not location:
+            location = General().generate_id(Location)
+            instance = Location(id=location, title="cafe", article="add be later")
+
+            SESSION.add(instance)
+            SESSION.flush()
+
+            return location
+
+        return location.id
+
     def create(self, data):
-        pass
+        if not SESSION.query(Profile).get(data["user"]):
+            return {
+                "success": False,
+                "error": "UserNotFound"
+            }
+        data["location"] = self.get_or_create_location()
+        data["category"] = self.get_or_create_category_for_item()
+        item = General().generate_id(Item)
+        ItemService().save(data, item)
+        pk_food = General().generate_id(Food)
+        self.save(data, pk_food, item)
+
+        instance_item = {
+            "id": item,
+            "category": data["category"],
+            "location": data["location"],
+            'title': data["title"],
+            "article": data["article"],
+            "attribute": data["attribute"]
+        }
+
+        instance_food = {
+            "id": pk_food,
+            "item": item,
+            "user": data["user"],
+            "date_start": data["date_start"],
+            "date_end": data["date_end"],
+            "status": data["status"],
+            "amount": data["amount"],
+            "measure": data["measure"]
+        }
+
+        return {
+            "success": True,
+            "data": {
+                "item": instance_item,
+                "food": instance_food
+            }
+        }

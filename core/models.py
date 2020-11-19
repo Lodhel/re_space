@@ -115,10 +115,10 @@ class Item(Base):
 
     id = Column(Integer, primary_key=True, unique=True)
     article = Column()
-    category = Column(unique=True)
-    location = Column(unique=True)
+    category = Column()
+    location = Column()
     attribute = Column()
-    title = Column(unique=True)
+    title = Column()
 
 
 class Food(Base):
