@@ -42,8 +42,11 @@ async def websocket_echo(request):
     request.app['channels'].append(ws)
     await ws.prepare(request)
     async for msg in ws:
-        for client in request.app['channels']:
-            await client.send_json(msg.data)
+        for pk, client in enumerate(request.app['channels']):
+            try:
+                await client.send_json(msg.data)
+            except ConnectionResetError:
+                del request.app['channels'][pk]
 
 
 async def websocket_food(request):
