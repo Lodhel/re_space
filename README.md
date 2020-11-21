@@ -11,3 +11,10 @@ api/food/
             "amount": "1",
             "measure": "kg"
         }
+
+api/add_friend/
+
+    {
+            "user": "1",
+            "friend": "19"
+        }
