@@ -144,3 +144,17 @@ class Food(Base):
     status = Column()
     amount = Column()
     measure = Column()
+
+
+class FriendList(Base):
+
+    def __init__(self, id=None, user=None, array=None):
+        self.id = id
+        self.user = user
+        self.array = array
+
+    __tablename__ = Table('friend_list', Main().create_metadata(), autoload=True)
+
+    id = Column(Integer, primary_key=True, unique=True)
+    user = Column(Integer, unique=True)
+    array = Column()

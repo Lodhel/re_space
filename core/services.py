@@ -1,7 +1,7 @@
 import datetime
 
 from models import SESSION
-from models import BaseUser, Profile, CategoryItem, Location, Item, Food
+from models import BaseUser, Profile, CategoryItem, Location, Item, Food, FriendList
 
 
 import hashlib
@@ -283,5 +283,48 @@ class FoodServices:
             "data": {
                 "item": instance_item,
                 "food": instance_food
+            }
+        }
+
+
+class FriendService:
+
+    def add(self, data):
+        if not SESSION.query(Profile).get(data["user"]):
+            return {
+                "success": False,
+                "error": "UserNotFound"
+            }
+
+        pk = General().generate_id(FriendList)
+        friend_list = SESSION.query(FriendList).filter(FriendList.user == data["user"]).first()
+
+        if not friend_list:
+            instance = FriendList(pk, user=data["user"], array=data["friend"])
+
+            SESSION.add(instance)
+            SESSION.flush()
+
+            return {
+                "success": True,
+                "data": {
+                    "id": pk,
+                    "user": data["user"],
+                    "list": data["friend"]
+                }
+            }
+
+        array = "{}, {}".format(friend_list.array, data["friend"])
+        friend_list.array = array
+
+        SESSION.add(friend_list)
+        SESSION.flush()
+
+        return {
+            "success": True,
+            "data": {
+                "id": pk,
+                "user": data["user"],
+                "list": array
             }
         }
