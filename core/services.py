@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from models import SESSION
 from models import BaseUser, Profile, CategoryItem, Location, Item, Food, FriendList
@@ -293,7 +294,7 @@ class FriendService:
         array = string.split(', ')
         return [int(pk) for pk in array]
 
-    def add(self, data):
+    def validate(self, data):
         if not SESSION.query(Profile).get(data["user"]):
             return {
                 "success": False,
@@ -305,6 +306,57 @@ class FriendService:
                 "success": False,
                 "error": "UserIsFriend"
             }
+
+        return None
+
+    def get(self, data):
+        return {
+            "success": True,
+            "data": self.streamline(SESSION.query(FriendList).filter(FriendList.user == data["user"]).first())
+        }
+
+    def delete(self, data):
+        validation_case = self.validate(data)
+        if validation_case:
+            return validation_case
+
+        friend_list = SESSION.query(FriendList).filter(FriendList.user == data["user"]).first()
+        if not friend_list and int(data["friend"]) not in self.streamline(friend_list):
+            return {
+                "success": False,
+                "error": "NotFound"
+            }
+
+        array = self.streamline(friend_list.array)
+        string_array = ""
+
+        for index, friend in enumerate(array):
+            if friend == data["friend"]:
+                del array[index]
+            else:
+                "{}, {}".format(string_array, friend)
+
+        friend_list.array = string_array
+
+        SESSION.add(friend_list)
+        SESSION.flush()
+
+        return {
+            "success": True,
+            "data": {
+                "user": data["user"],
+                "list": array
+            }
+        }
+
+    def add(self, data):
+        if data["command"] == "get":
+            return self.get(data)
+        if data["command"] == "delete":
+            return self.delete(data)
+        validation_case = self.validate(data)
+        if validation_case:
+            return validation_case
 
         pk = General().generate_id(FriendList)
         friend_list = SESSION.query(FriendList).filter(FriendList.user == data["user"]).first()
@@ -341,6 +393,6 @@ class FriendService:
             "data": {
                 "id": pk,
                 "user": data["user"],
-                "list": array
+                "list": self.streamline(array)
             }
         }

@@ -59,7 +59,7 @@ async def websocket_food(request):
         await ws.send_json(response)
 
 
-async def websocket_add_friend(request):
+async def websocket_friend(request):
 
     ws = web.WebSocketResponse()
     await ws.prepare(request)

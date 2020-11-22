@@ -4,7 +4,7 @@ import ssl
 from aiohttp import web
 
 from views import websocket_registration, websocket_login, websocket_item, websocket_echo, websocket_food
-from views import websocket_add_friend
+from views import websocket_friend
 import asyncio
 
 
@@ -19,7 +19,7 @@ app.add_routes([
     web.get('/api/item/', websocket_item),
     web.get('/api/echo/', websocket_echo),
     web.get('/api/food/', websocket_food),
-    web.get('/api/add_friend/', websocket_add_friend)
+    web.get('/api/friend/', websocket_friend)
 ])
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
