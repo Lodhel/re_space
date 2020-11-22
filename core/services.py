@@ -289,11 +289,21 @@ class FoodServices:
 
 class FriendService:
 
+    def streamline(self, string):
+        array = string.split(', ')
+        return [int(pk) for pk in array]
+
     def add(self, data):
         if not SESSION.query(Profile).get(data["user"]):
             return {
                 "success": False,
                 "error": "UserNotFound"
+            }
+
+        if data["user"] == data["friend"]:
+            return {
+                "success": False,
+                "error": "UserIsFriend"
             }
 
         pk = General().generate_id(FriendList)
@@ -312,6 +322,12 @@ class FriendService:
                     "user": data["user"],
                     "list": data["friend"]
                 }
+            }
+
+        if data["friend"] in self.streamline(friend_list.aray):
+            return {
+                "success": False,
+                "error": "FriendAddedList"
             }
 
         array = "{}, {}".format(friend_list.array, data["friend"])
